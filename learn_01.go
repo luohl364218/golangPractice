@@ -2,12 +2,11 @@
 
 //程序所属包
 package main
-//导入依赖包
-import (
-	"fmt"
-	"golangPractice/show02"
-	"golangPractice/learn02"
+//import printer "fmt"
+import (//. "fmt"
+	_ "golangPractice/learn02"
 )
+
 //常量定义  首字母用大写
 const NAME  = "heylink\n"
 //全局变量
@@ -26,7 +25,7 @@ type iLearn interface {
 }
 //函数定义
 func learn()  {
-	fmt.Print("test\n")
+	//printer.Print("test\n")
 }
 
 func main() {
@@ -49,7 +48,19 @@ func main() {
 	原因是我的GOPATH路径下没有设置src文件夹，然后还要把当前项目放在src文件夹下
 	go默认到GOPATH的src路径下去找源码，所以环境还是很重要的
 	*/
-	show02.Show02()
-	learn02.Learn02()
+	//show02.Show02()
+	//learn02.Learn02()
+
+	/*********learn03***********/
+	/*
+	import别名，“.”,"_"
+	别名操作的含义是：将导入的包命名为另一个容易记忆的别名
+	点（.）操作的含义是：点（.）标识的包导入后，调用该包中函数时可以省略前缀包名；
+	下划线（_）操作的含义是：导入该包，但不导入整个包，而是执行该包中的init函数，
+	因此无法通过包名来调用包中其他的函数。使用下划线（_）操作往往是为了注册包里的引擎，让外部可以方便地使用；
+	*/
+	//printer.Print("this is a alias for fmt!")
+	//Print("this is a . for fmt!")
+
 }
 
