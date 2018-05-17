@@ -27,6 +27,25 @@ type iLearn interface {
 func learn()  {
 	//printer.Print("test\n")
 }
+//常量显式定义
+const golang string = "golang"
+//常量隐式定义
+const goland  = "goland"
+//组合定义
+const (
+	cat string = "猫"
+	dog = "狗"
+)
+//单行定义多个常量
+const apple, banana string = "苹果", "香蕉"
+const b, c  = 1, "测试"
+const cLen  = len(c)
+//自定义函数 含返回类型
+func getString() string {
+	return "getString"
+}
+//const getStringLen  = len(getString())   //错误 函数返回值不是const
+
 
 func main() {
 	/*********learn01***********/
@@ -61,6 +80,22 @@ func main() {
 	*/
 	//printer.Print("this is a alias for fmt!")
 	//Print("this is a . for fmt!")
+
+	/*********learn04***********/
+	/*常量和变量*/
+	//orange := "橘子"
+
+	//fmt.Print(cat)
+	//fmt.Print(dog)
+	//fmt.Print(apple)
+	//fmt.Print(banana)
+	//fmt.Print(orange)
+	//fmt.Print("\n")
+	//fmt.Print(reflect.TypeOf(b))
+	//fmt.Print("\n")
+	//fmt.Print(b)
+	//fmt.Print(c)
+	//fmt.Print(cLen)
 
 }
 
