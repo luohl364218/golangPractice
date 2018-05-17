@@ -2,7 +2,7 @@ package show02
 
 import (
 	"fmt"
-	"golangPractice/learn02"
+	"golangPractice/practice00/learn02"
 )
 
 func init() {

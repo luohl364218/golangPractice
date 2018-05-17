@@ -4,7 +4,7 @@
 package main
 //import printer "fmt"
 import (//. "fmt"
-	_ "golangPractice/learn02"
+	_ "golangPractice/practice00/learn02"
 	"fmt"
 )
 
