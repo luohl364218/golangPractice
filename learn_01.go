@@ -125,7 +125,7 @@ func main() {
 	3，表达式隐式使用法；
 	4，单行使用法。
 	*/
-	fmt.Print("value1:")
+	/*fmt.Print("value1:")
 	fmt.Print(value1)
 	fmt.Print("\n")
 	fmt.Print("value2：")
@@ -159,7 +159,58 @@ func main() {
 	fmt.Print("\n")
 	fmt.Print("value11：")
 	fmt.Print(value11)
-	fmt.Print("\n")
+	fmt.Print("\n")*/
+
+	/*********learn06***********/
+	/*运算符等*/
+	//只有a++，没有++a
+	value := 0
+	value++
+	//fmt.Print(value)
+	//if-else
+	if value > 1 {
+		fmt.Print("value > 1\n")
+	} else if value < 7{
+		fmt.Print("value < 7\n")
+	} else {
+		fmt.Print("value >= 7\n")
+	}
+	//switch
+	switch value {
+	case 1:
+		fmt.Println("value = 1")
+	case 2:
+		fmt.Println("value = 2")
+	default:
+		fmt.Println("value = 3")
+	}
+	//for
+	/*for {
+		fmt.Println("死循环")
+	}*/
+
+	for i:=1; i < 10; i++{
+		fmt.Println("for...")
+		//time.Sleep(1*time.Second)
+	}
+	array := [] string{"苹果", "香蕉", "雪梨"}
+	for key, valueNum := range array {
+		fmt.Print("key的值为：")
+		fmt.Println(key)
+		fmt.Print("value的值为：")
+		fmt.Println(valueNum)
+	}
+	//只取得value
+	for _, valueNum := range array {
+		fmt.Print("value的值为：")
+		fmt.Println(valueNum)
+	}
+
+	//goto
+	goto One
+	fmt.Println("中间代码块")
+	One:
+		fmt.Println("goto代码块")
 
 }
 
