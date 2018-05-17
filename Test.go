@@ -11,6 +11,6 @@ func main()  {
 	practice01.GetOSInfo()
 	fmt.Println("************practice02****************")
 	//practice02.TestValueAndRefType()
-	practice02.TestGoRoute()
-
+	//practice02.TestGoRoute()
+	practice02.TestPipe()
 }
