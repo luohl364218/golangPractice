@@ -10,8 +10,8 @@ func main()  {
 	fmt.Println("************practice01****************")
 	practice01.GetOSInfo()
 	fmt.Println("************practice02****************")
-	//practice02.TestValueAndRefType()
+	practice02.TestValueAndRefType()
 	//practice02.TestGoRoute()
 	//practice02.TestPipe()
-	practice02.TestMultiReturnValue()
+	//practice02.TestMultiReturnValue()
 }

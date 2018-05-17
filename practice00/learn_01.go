@@ -4,7 +4,7 @@
 package main
 //import printer "fmt"
 import (//. "fmt"
-	_ "golangPractice/practice00/learn02"
+	_ "golangPractice/practice00/learn02"  //只初始化 不引用
 	"fmt"
 )
 
