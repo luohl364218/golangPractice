@@ -12,5 +12,6 @@ func main()  {
 	fmt.Println("************practice02****************")
 	//practice02.TestValueAndRefType()
 	//practice02.TestGoRoute()
-	practice02.TestPipe()
+	//practice02.TestPipe()
+	practice02.TestMultiReturnValue()
 }
