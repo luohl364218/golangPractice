@@ -5,6 +5,7 @@ package main
 //import printer "fmt"
 import (//. "fmt"
 	_ "golangPractice/learn02"
+	"fmt"
 )
 
 //常量定义  首字母用大写
@@ -46,6 +47,24 @@ func getString() string {
 }
 //const getStringLen  = len(getString())   //错误 函数返回值不是const
 
+const value1  = iota
+//const value2  = iota
+
+const (
+	value2 = iota
+	_ //跳值使用法
+	_
+	//value2_5 = 1.5  //插队使用法 value3+1
+	value3 = iota
+	value4 = iota * 2
+	//表达式隐式使用法
+	value5
+	value6
+	//单行使用法
+	value7, value8 = iota, iota + 3
+	value9, value10
+	value11 = iota
+)
 
 func main() {
 	/*********learn01***********/
@@ -96,6 +115,51 @@ func main() {
 	//fmt.Print(b)
 	//fmt.Print(c)
 	//fmt.Print(cLen)
+	/*********learn05***********/
+	/*go语言的iota关键字
+	iota在const关键字出现时将被重置为0
+	const中新增一行常量声明将使iota计数一次
+	iota常见使用法：
+	1，跳值使用法；
+	2，插队使用法；
+	3，表达式隐式使用法；
+	4，单行使用法。
+	*/
+	fmt.Print("value1:")
+	fmt.Print(value1)
+	fmt.Print("\n")
+	fmt.Print("value2：")
+	fmt.Print(value2)
+	fmt.Print("\n")
+	fmt.Print("value3：")
+	fmt.Print(value3)
+	fmt.Print("\n")
+	//表达式隐式使用法
+	fmt.Print("value4：")
+	fmt.Print(value4)
+	fmt.Print("\n")
+	fmt.Print("value5：")
+	fmt.Print(value5)
+	fmt.Print("\n")
+	fmt.Print("value6：")
+	fmt.Print(value6)
+	fmt.Print("\n")
+	//单行使用法
+	fmt.Print("value7：")
+	fmt.Print(value7)
+	fmt.Print("\n")
+	fmt.Print("value8：")
+	fmt.Print(value8)
+	fmt.Print("\n")
+	fmt.Print("value9：")
+	fmt.Print(value9)
+	fmt.Print("\n")
+	fmt.Print("value10：")
+	fmt.Print(value10)
+	fmt.Print("\n")
+	fmt.Print("value11：")
+	fmt.Print(value11)
+	fmt.Print("\n")
 
 }
 
