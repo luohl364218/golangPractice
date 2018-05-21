@@ -1,13 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type Student struct {
 	//公有变量
-	Name string
+	Name string  "这个是tag,可以通过反射获取"
 	//私有变量
-	age int
+	age int  "可以为每个属性添加tag"
 	score float32
+}
+
+type Cart struct {
+	//匿名字段
+	Student
+	int
+	start time.Time
 }
 
 func main() {
@@ -42,6 +52,23 @@ func main() {
 	fmt.Printf("name:%p\n", &stu.Name)
 	fmt.Printf("age:%p\n",&stu.age)
 	fmt.Printf("score:%p\n", &stu.score)
+
+	//匿名字段
+	var cart Cart
+	cart.Name = "test"
+	cart.age = 76
+	cart.score = 1.1
+	cart.int = 100
+
+	fmt.Println(cart)
 }
 
+//结构体没有构造函数，需要的话自己定义
+func NewStudent(name string, age int, score float32) *Student {
+	return &Student{
+		Name:name,
+		age:age,
+		score:score,
+	}
+}
 
