@@ -12,6 +12,11 @@ func (p *Car) Run()  {
 	fmt.Println("running...")
 }
 
+//重写string接口 与java中的string相似
+func (p Car) String() string {
+	return fmt.Sprintf("weight=%d name=%s", p.weight, p.name)
+}
+
 type Vehicle struct {
 	status bool
 	running bool
@@ -45,5 +50,12 @@ func main() {
 	fmt.Println(a)
 	//调用父类方法
 	a.Run()
+
+	car := Car{
+		weight:8,
+		name:"car",
+	}
+
+	fmt.Println(car)
 }
 
