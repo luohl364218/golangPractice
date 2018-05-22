@@ -20,6 +20,7 @@ type ReadWriter interface {
 type File struct {
 }
 
+//注意：File的指针类型实现了接口方法，不是File类型
 func (f *File) Read(){
 	fmt.Println("read data")
 }
@@ -34,7 +35,12 @@ func TestRW(rw ReadWriter) {
 }
 
 func main()  {
-	var f File
+	var f *File
 	//为什么传指针类型？因为是指针类型实现了接口方法，不是值类型
-	TestRW(&f)
+	TestRW(f)
+	//判断是否实现某接口
+	var i interface{}
+	i = f
+	v, ok := i.(ReadWriter)
+	fmt.Println(v, ok)
 }
