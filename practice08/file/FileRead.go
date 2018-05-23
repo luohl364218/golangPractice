@@ -23,7 +23,11 @@ func main()  {
 		return
 	}
 
-	print(str)
+	slice := []rune(str)
+
+	for _,v := range slice{
+		fmt.Printf("%c", v)
+	}
 
 }
 
