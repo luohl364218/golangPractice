@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p>hello, {{.Name}}</p>
+    <p>your age is {{.Age}}</p>
+    {{if gt .Age 16}}
+            <p>hello, old man</p>
+    {{else}}
+            <p>hello, young man</p>
+    {{end}}
+</body>
+</html>
