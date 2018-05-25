@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/garyburd/redigo/redis"
 	"time"
+	"fmt"
 )
 
 var pool *redis.Pool
@@ -17,6 +18,7 @@ func initRedis(addr string, maxIdle int, maxActive int, idleTimeout time.Duratio
 			return redis.Dial("tcp", addr)
 		},
 	}
+	fmt.Println("init redis success")
 	return
 }
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func initServer(addr string) (err error) {
+func runServer(addr string) (err error) {
 	listen, err := net.Listen("tcp", addr)
 	if err != nil {
 		fmt.Println("listen err:", err)
