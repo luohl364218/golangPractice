@@ -23,15 +23,12 @@ func runServer(addr string) (err error) {
 
 func handleConnect(conn net.Conn)  {
 	defer conn.Close()
-	for {
-		buf := make([]byte, 512)
-		//记录读取的数量，不然会输出很多空白的内容
-		n, err := conn.Read(buf)
-		if err != nil {
-			fmt.Println("read err:", err)
-			return
-		}
-		fmt.Printf(string(buf[:n]))
-		//todo
+	client := &Client{
+		conn:conn,
+	}
+	err := client.Process()
+	if err != nil {
+		fmt.Println("client process failed, ", err)
+		return
 	}
 }
