@@ -1,6 +1,6 @@
 package protocol
 
-import "golangPractice/chat_room/chat_server/model"
+import "golangPractice/chat_room/model"
 
 type Message struct {
 	Cmd string `json:"cmd"`
