@@ -78,16 +78,17 @@ func (p *Client) login(msg *protocol.Message) (err error) {
 		p.loginResp(err)
 	}()
 
-	fmt.Printf("recv user login request, data:%v", *msg)
+	fmt.Printf("recv user login request, data:%v\n", *msg)
 	var cmd protocol.LoginCmd
 	err = json.Unmarshal([]byte(msg.Data), &cmd)
 	if err != nil {
 		return
 	}
-	_, err = mgr.Login(cmd.Id, cmd.Passwd)
+	user, err := mgr.Login(cmd.Id, cmd.Passwd)
 	if err != nil {
 		return
 	}
+	fmt.Println("user ", user.UserId, " login success")
 	return
 }
 

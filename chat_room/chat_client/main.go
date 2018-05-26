@@ -42,6 +42,7 @@ func main() {
 	}
 }
 
+//注意 先在Redis中执行 hset users 1 "{\"user_id\":1,\"passwd\":\"123456789\"}" 存储用户信息
 func login(conn net.Conn) (err error) {
 	var msg protocol.Message
 	msg.Cmd = protocol.UserLogin
