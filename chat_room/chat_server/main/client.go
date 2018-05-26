@@ -18,19 +18,14 @@ type Client struct {
 func (p *Client) readPackage() (msg *protocol.Message, err error) {
 	//todo 64位系统为8 32位系统为4
 	//首先读取消息长度[0:8]
-	n, err := p.conn.Read(p.buf[0:8])
-	if n != 8 {
+	n, err := p.conn.Read(p.buf[0:4])
+	if n != 4 {
 		err = errors.New("read header failed")
 		return
 	}
 	//字节转为整型
-	buffer := bytes.NewBuffer(p.buf[0:8])
-	var temp int64
-	err = binary.Read(buffer, binary.BigEndian, &temp)
-	if err != nil {
-		fmt.Println("read package len failed")
-		return
-	}
+	var temp uint32
+	temp = binary.BigEndian.Uint32(p.buf[0:4])
 	//拿到消息长度
 	packLen := int(temp)
 	//判断消息内容长度是否正确

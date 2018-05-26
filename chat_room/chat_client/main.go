@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"golangPractice/chat_room/protocol"
 	"encoding/json"
-	"bytes"
 	"encoding/binary"
 	"errors"
 	"bufio"
@@ -65,17 +64,12 @@ func login(conn net.Conn) (err error) {
 	//写消息长度
 	var buf [4]byte
 	packLen := uint32(len(data))
-	buffer := bytes.NewBuffer(buf[:])
 	//将长度值写入切片
-	err = binary.Write(buffer, binary.BigEndian, packLen)
-	if err != nil {
-		fmt.Println("write package len failed")
-		return
-	}
+	binary.BigEndian.PutUint32(buf[:], packLen)
 	//发送消息长度
-	n, err := conn.Write(buffer.Bytes())
+	n, err := conn.Write(buf[:])
 	//todo 64位系统为8 32位系统为4
-	if err != nil || n != 8{
+	if err != nil || n != 4{
 		err = errors.New("write header failed")
 		return
 	}
