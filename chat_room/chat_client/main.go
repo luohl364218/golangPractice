@@ -48,7 +48,7 @@ func login(conn net.Conn) (err error) {
 	msg.Cmd = protocol.UserLogin
 
 	var loginCmd protocol.LoginCmd
-	loginCmd.Id = 5
+	loginCmd.Id = 2
 	loginCmd.Passwd = "123456789"
 
 	data, err := json.Marshal(loginCmd)
@@ -84,6 +84,7 @@ func login(conn net.Conn) (err error) {
 	if err != nil {
 		fmt.Println("read package failed, err:", err)
 	}
+	fmt.Println("recv login resp msg:", *rspMsg)
 	//转为返回结果
 	var loginResp protocol.LoginCmdRes
 	err = json.Unmarshal([]byte(rspMsg.Data), &loginResp)

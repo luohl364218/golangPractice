@@ -102,6 +102,8 @@ func (p *Client) loginResp(err error) {
 	//组装【登录回复】的内容
 	var loginRes protocol.LoginCmdRes
 	loginRes.Code = protocol.CorrectCode
+	loginRes.Users = clientMgr.GetAllUsersId()
+
 	if err != nil {
 		loginRes.Code = protocol.ErrorCode
 		loginRes.Error = fmt.Sprintf("%v", err)

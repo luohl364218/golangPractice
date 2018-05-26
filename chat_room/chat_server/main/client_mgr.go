@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 //所有在线客户端列表
 type ClientMgr struct {
@@ -25,6 +27,13 @@ func (p *ClientMgr) GetClient(userId int) (client *Client, err error) {
 	client, ok := p.onlineUsers[userId]
 	if !ok {
 		err = fmt.Errorf("user %d not exist", userId)
+	}
+	return
+}
+
+func (p *ClientMgr) GetAllUsersId() (result []int) {
+	for userId, _ := range p.onlineUsers{
+		result = append(result, userId)
 	}
 	return
 }

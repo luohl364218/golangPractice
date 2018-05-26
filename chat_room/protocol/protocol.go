@@ -18,5 +18,6 @@ type RegisterCmd struct {
 
 type LoginCmdRes struct {
 	Code int `json:"code"`
+	Users []int `json:"users"`
 	Error string `json:"error"`
 }
