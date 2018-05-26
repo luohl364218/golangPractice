@@ -19,8 +19,13 @@ func main() {
 		return
 	}
 
+	var userId int
+	var password string
+	fmt.Println("please input userId and password:")
+	fmt.Scanf("%d %s", &userId, &password)
+
 	//TCP必须保持连接
-	err = login(connect)
+	err = login(connect, userId, password)
 	if err != nil {
 		fmt.Println("login failed, err:", err)
 		return
@@ -43,13 +48,13 @@ func main() {
 }
 
 //注意 先在Redis中执行 hset users 1 "{\"user_id\":1,\"passwd\":\"123456789\"}" 存储用户信息
-func login(conn net.Conn) (err error) {
+func login(conn net.Conn, userId int, password string) (err error) {
 	var msg protocol.Message
 	msg.Cmd = protocol.UserLogin
 
 	var loginCmd protocol.LoginCmd
-	loginCmd.Id = 2
-	loginCmd.Passwd = "123456789"
+	loginCmd.Id = userId
+	loginCmd.Passwd = password
 
 	data, err := json.Marshal(loginCmd)
 	if err != nil {
@@ -95,22 +100,22 @@ func login(conn net.Conn) (err error) {
 	//如果返回错误，执行注册
 	if loginResp.Code == protocol.ErrorCode{
 		fmt.Println("user not register, start register")
-		register(conn)
+		register(conn, userId, password)
 	}
 	return
 }
 
 //注册功能
-func register(conn net.Conn) (err error) {
+func register(conn net.Conn, userId int, password string) (err error) {
 	var msg protocol.Message
 	msg.Cmd = protocol.UserRegister
 
 	var registerCmd protocol.RegisterCmd
-	registerCmd.User.UserId = 5
-	registerCmd.User.Nick = "stu05"
+	registerCmd.User.UserId = userId
+	registerCmd.User.Nick = fmt.Sprintf("stu%d", userId)
 	registerCmd.User.Sex = "male"
-	registerCmd.User.Passwd = "123456789"
-	registerCmd.User.Header = "/header/1.jpg"
+	registerCmd.User.Passwd = password
+	registerCmd.User.Header = fmt.Sprintf("/header/%d.jgp", userId)
 
 	data, err := json.Marshal(registerCmd)
 	if err != nil {
