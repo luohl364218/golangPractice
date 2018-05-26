@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"time"
+	"golangPractice/chat_room/model"
 )
 
 var (
@@ -22,7 +23,7 @@ func NewUserMgr(pool *redis.Pool) (mgr *UserMgr) {
 	return
 }
 
-func (p *UserMgr) getUser(conn redis.Conn, id int) (user *User, err error) {
+func (p *UserMgr) getUser(conn redis.Conn, id int) (user *model.User, err error) {
 	result, err := redis.String(conn.Do("HGet", UserTable, fmt.Sprintf("%d", id)))
 	if err != nil {
 		if err == redis.ErrNil {
@@ -31,7 +32,7 @@ func (p *UserMgr) getUser(conn redis.Conn, id int) (user *User, err error) {
 		return
 	}
 
-	user = &User{}
+	user = &model.User{}
 	err = json.Unmarshal([]byte(result), user)
 	if err != nil {
 		return
@@ -39,7 +40,7 @@ func (p *UserMgr) getUser(conn redis.Conn, id int) (user *User, err error) {
 	return
 }
 
-func (p *UserMgr) Login(id int, passwd string) (user *User, err error) {
+func (p *UserMgr) Login(id int, passwd string) (user *model.User, err error) {
 	//获取Redis连接
 	conn := p.pool.Get()
 	defer conn.Close()
@@ -53,12 +54,12 @@ func (p *UserMgr) Login(id int, passwd string) (user *User, err error) {
 		err = ErrInvalidPassword
 	}
 	//设置用户登录状态
-	user.Status = UserStatusOnline
+	user.Status = model.UserStatusOnline
 	user.LastLogin = fmt.Sprintf("%v", time.Now())
 	return
 }
 
-func (p *UserMgr) Register(user *User) (err error) {
+func (p *UserMgr) Register(user *model.User) (err error) {
 	//判断输入是否为空
 	if user == nil {
 		err = ErrInvalidParams

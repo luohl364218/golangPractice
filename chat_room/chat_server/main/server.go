@@ -28,7 +28,7 @@ func handleConnect(conn net.Conn)  {
 	}
 	err := client.Process()
 	if err != nil {
-		fmt.Println("client process failed, ", err)
+		fmt.Println("client process err, ", err)
 		return
 	}
 }
