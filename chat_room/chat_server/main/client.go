@@ -106,7 +106,7 @@ func (p *Client) notifyOthersUserOnline(userId int)  {
 		if id == userId {
 			continue
 		}
-		client.notifyUserOnline(id)
+		client.notifyUserOnline(userId)
 	}
 }
 
