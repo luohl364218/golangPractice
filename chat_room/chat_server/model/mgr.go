@@ -52,6 +52,7 @@ func (p *UserMgr) Login(id int, passwd string) (user *model.User, err error) {
 	//判断密码是否正确
 	if user.UserId != id || user.Passwd != passwd {
 		err = ErrInvalidPassword
+		return
 	}
 	//设置用户登录状态
 	user.Status = model.UserStatusOnline
