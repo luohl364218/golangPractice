@@ -21,3 +21,8 @@ type LoginCmdRes struct {
 	Users []int `json:"users"`
 	Error string `json:"error"`
 }
+
+type UserStatusNotify struct {
+	UserId int `json:"user_id"`
+	Status int `json:"status"`
+}

@@ -37,3 +37,11 @@ func (p *ClientMgr) GetAllUsersId() (result []int) {
 	}
 	return
 }
+
+func (p *ClientMgr) GetAllUsers() (map[int]*Client) {
+	return p.onlineUsers
+}
+
+func (p *ClientMgr) DelClient(userId int)  {
+	delete(p.onlineUsers, userId)
+}

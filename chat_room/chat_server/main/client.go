@@ -11,12 +11,12 @@ import (
 
 type Client struct {
 	conn net.Conn
+	userId int
 	buf [8192]byte
 }
 
 func (p *Client) readPackage() (msg *protocol.Message, err error) {
-	//todo 64位系统为8 32位系统为4
-	//首先读取消息长度[0:8]
+	//首先读取消息长度[0:4]
 	n, err := p.conn.Read(p.buf[0:4])
 	if n != 4 {
 		err = errors.New("read header failed")
@@ -48,6 +48,9 @@ func (p *Client) Process() (err error) {
 		var msg *protocol.Message
 		msg, err = p.readPackage()
 		if err != nil {
+			//用户断开连接 删除该用户在线状态
+			clientMgr.DelClient(p.userId)
+			//todo 通知所有在线用户该用户已经下线
 			fmt.Println("read package err:", err)
 			return
 		}
@@ -90,7 +93,52 @@ func (p *Client) login(msg *protocol.Message) (err error) {
 	}
 	fmt.Println("user ", user.UserId, " login success")
 	clientMgr.AddClient(cmd.Id, p)
+	//设置该client对应的ID
+	p.userId = cmd.Id
+	//通知其他用户该用户上线
+	p.notifyOthersUserOnline(cmd.Id)
 	return
+}
+
+func (p *Client) notifyOthersUserOnline(userId int)  {
+	users := clientMgr.GetAllUsers()
+	for id, client := range users{
+		if id == userId {
+			continue
+		}
+		client.notifyUserOnline(id)
+	}
+}
+
+func (p *Client) notifyUserOnline(userId int)  {
+	//【回复】消息结构体
+	var respMsg protocol.Message
+	//【回复】命令头部 用户状态改变协议
+	respMsg.Cmd = protocol.UserStatusNotifyRes
+	//组装【用户状态】结构体的内容
+	var notifyRes protocol.UserStatusNotify
+	notifyRes.UserId = userId
+	notifyRes.Status = protocol.UserOnline
+	//序列化【用户状态】消息
+	data, err := json.Marshal(notifyRes)
+	if err != nil {
+		fmt.Println("marshal failed, err:", err)
+		return
+	}
+	//【回复】命令内容
+	respMsg.Data = string(data)
+	//序列化【回复】消息
+	data, err = json.Marshal(respMsg)
+	if err != nil {
+		fmt.Println("marshal failed, err:", err)
+		return
+	}
+	//发送【回复】消息
+	err = p.writePackage(data)
+	if err != nil {
+		fmt.Println("send failed, err:", err)
+		return
+	}
 }
 
 //登录回复消息
