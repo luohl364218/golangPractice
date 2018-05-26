@@ -39,6 +39,9 @@ func recvMessageFromServer(msg *protocol.Message)  {
 		fmt.Println("unmarshal failed, err:", err)
 		return
 	}
-	//后台线程 通过管道将消息给前台
+	//1.直接显示 可能会有多线程问题
+	fmt.Println("【broadcast】user ",recvMsg.UserId," say:", recvMsg.Data)
+
+	//2.后台线程 通过管道将消息给前台
 	msgChan <- recvMsg
 }
