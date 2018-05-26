@@ -3,7 +3,6 @@ package main
 import (
 	"net"
 	"errors"
-	"bytes"
 	"encoding/binary"
 	"fmt"
 	"encoding/json"
@@ -145,15 +144,10 @@ func (p *Client) register(msg *protocol.Message) (err error) {
 func (p *Client) writePackage(data []byte) (err error) {
 	//写消息长度
 	packLen := uint32(len(data))
-	buffer := bytes.NewBuffer(p.buf[0:4])
 	//将长度值写入切片
-	err = binary.Write(buffer, binary.BigEndian, packLen)
-	if err != nil {
-		fmt.Println("write package len failed")
-		return
-	}
+	binary.BigEndian.PutUint32(p.buf[0:4], packLen)
 	//发送消息长度
-	n, err := p.conn.Write(buffer.Bytes())
+	n, err := p.conn.Write(p.buf[0:4])
 	if err != nil {
 		err = errors.New("write header failed")
 		return
