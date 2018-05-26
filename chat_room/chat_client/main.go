@@ -48,7 +48,7 @@ func login(conn net.Conn) (err error) {
 	msg.Cmd = protocol.UserLogin
 
 	var loginCmd protocol.LoginCmd
-	loginCmd.Id = 1
+	loginCmd.Id = 5
 	loginCmd.Passwd = "123456789"
 
 	data, err := json.Marshal(loginCmd)
@@ -69,7 +69,66 @@ func login(conn net.Conn) (err error) {
 	binary.BigEndian.PutUint32(buf[:], packLen)
 	//发送消息长度
 	n, err := conn.Write(buf[:])
-	//todo 64位系统为8 32位系统为4
+
+	if err != nil || n != 4{
+		err = errors.New("write header failed")
+		return
+	}
+
+	_, err = conn.Write([]byte(data))
+	if err != nil {
+		return
+	}
+	//读取服务端回复
+	rspMsg, err := readPackage(conn)
+	if err != nil {
+		fmt.Println("read package failed, err:", err)
+	}
+	//转为返回结果
+	var loginResp protocol.LoginCmdRes
+	err = json.Unmarshal([]byte(rspMsg.Data), &loginResp)
+	if err != nil {
+		fmt.Println("unmarshal login response err:", err)
+		return
+	}
+	//如果返回错误，执行注册
+	if loginResp.Code == protocol.ErrorCode{
+		fmt.Println("user not register, start register")
+		register(conn)
+	}
+	return
+}
+
+//注册功能
+func register(conn net.Conn) (err error) {
+	var msg protocol.Message
+	msg.Cmd = protocol.UserRegister
+
+	var registerCmd protocol.RegisterCmd
+	registerCmd.User.UserId = 5
+	registerCmd.User.Nick = "stu05"
+	registerCmd.User.Sex = "male"
+	registerCmd.User.Passwd = "123456789"
+	registerCmd.User.Header = "/header/1.jpg"
+
+	data, err := json.Marshal(registerCmd)
+	if err != nil {
+		return
+	}
+	msg.Data = string(data)
+
+	data, err = json.Marshal(msg)
+	if err != nil {
+		return
+	}
+
+	//写消息长度
+	var buf [4]byte
+	packLen := uint32(len(data))
+	//将长度值写入切片
+	binary.BigEndian.PutUint32(buf[:], packLen)
+	//发送消息长度
+	n, err := conn.Write(buf[:])
 	if err != nil || n != 4{
 		err = errors.New("write header failed")
 		return

@@ -43,6 +43,7 @@ func (p *Client) readPackage() (msg *protocol.Message, err error) {
 }
 
 func (p *Client) Process() (err error) {
+	//该死循环不能随便退出，不然后面就没办法与客户端继续通信了
 	for {
 		var msg *protocol.Message
 		msg, err = p.readPackage()
@@ -53,7 +54,7 @@ func (p *Client) Process() (err error) {
 		err = p.processMsg(msg)
 		if err != nil {
 			fmt.Println("process msg err:", err)
-			return
+			continue
 		}
 	}
 }
@@ -136,8 +137,10 @@ func (p *Client) register(msg *protocol.Message) (err error) {
 	}
 	err = mgr.Register(&cmd.User)
 	if err != nil {
+		fmt.Println("register user err:", err)
 		return
 	}
+	fmt.Println("user", cmd.User.UserId, " register success")
 	return
 }
 
