@@ -27,7 +27,6 @@ func processServerMessage(conn net.Conn) {
 		switch msg.Cmd {
 		case protocol.UserStatusNotifyRes:
 			updateUserStatus(userStatus)
-			showOnlineUserList()
 		}
 	}
 }

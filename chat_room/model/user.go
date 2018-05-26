@@ -2,7 +2,7 @@ package model
 
 const (
 	UserStatusOnline = 1
-	UserStatusOffline = iota
+	UserStatusOffline = 2
 )
 
 type User struct {

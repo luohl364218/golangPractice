@@ -8,9 +8,11 @@ func logic()  {
 }
 
 func enterMenu()  {
+	fmt.Println("----------【please make your choice】----------")
 	fmt.Println("1.list online user")
 	fmt.Println("2.talk")
 	fmt.Println("3.exit")
+	fmt.Println("-----------------------------------------------")
 
 	var sel int
 	fmt.Scanf("%d", &sel)

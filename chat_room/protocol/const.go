@@ -7,6 +7,4 @@ const (
 	UserStatusNotifyRes = "user_status_notify"
 	CorrectCode = 200
 	ErrorCode = 500
-	UserOnline = 1
-	UserOffline = 2
 )

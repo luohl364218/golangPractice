@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"golangPractice/chat_room/protocol"
+	"golangPractice/chat_room/model"
 )
 
 type Client struct {
@@ -50,7 +51,8 @@ func (p *Client) Process() (err error) {
 		if err != nil {
 			//用户断开连接 删除该用户在线状态
 			clientMgr.DelClient(p.userId)
-			//todo 通知所有在线用户该用户已经下线
+			//通知其他用户该当前用户下线
+			p.NotifyOthersUserStatus(p.userId, model.UserStatusOffline)
 			fmt.Println("read package err:", err)
 			return
 		}
@@ -96,21 +98,21 @@ func (p *Client) login(msg *protocol.Message) (err error) {
 	//设置该client对应的ID
 	p.userId = cmd.Id
 	//通知其他用户该用户上线
-	p.notifyOthersUserOnline(cmd.Id)
+	p.NotifyOthersUserStatus(cmd.Id, model.UserStatusOnline)
 	return
 }
 
-func (p *Client) notifyOthersUserOnline(userId int)  {
+func (p *Client) NotifyOthersUserStatus(userId ,userStatus int)  {
 	users := clientMgr.GetAllUsers()
 	for id, client := range users{
 		if id == userId {
 			continue
 		}
-		client.notifyUserOnline(userId)
+		client.notifyUserStatus(userId, userStatus)
 	}
 }
 
-func (p *Client) notifyUserOnline(userId int)  {
+func (p *Client) notifyUserStatus(userId ,userStatus int)  {
 	//【回复】消息结构体
 	var respMsg protocol.Message
 	//【回复】命令头部 用户状态改变协议
@@ -118,7 +120,7 @@ func (p *Client) notifyUserOnline(userId int)  {
 	//组装【用户状态】结构体的内容
 	var notifyRes protocol.UserStatusNotify
 	notifyRes.UserId = userId
-	notifyRes.Status = protocol.UserOnline
+	notifyRes.Status = userStatus
 	//序列化【用户状态】消息
 	data, err := json.Marshal(notifyRes)
 	if err != nil {
