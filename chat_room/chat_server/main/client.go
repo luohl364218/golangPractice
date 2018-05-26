@@ -70,6 +70,8 @@ func (p *Client) processMsg(msg *protocol.Message) (err error) {
 		err = p.login(msg)
 	case protocol.UserRegister:
 		err = p.register(msg)
+	case protocol.UserSendMessageCmd:
+		err = p.processUserSendMsg(msg)
 	default:
 		err = errors.New("unsupport message")
 		return
@@ -77,6 +79,54 @@ func (p *Client) processMsg(msg *protocol.Message) (err error) {
 	return
 }
 
+func (p *Client) processUserSendMsg(msg *protocol.Message) (err error) {
+	var userReq protocol.UserSendMessageReq
+	err = json.Unmarshal([]byte(msg.Data), &userReq)
+	if err != nil {
+		fmt.Println("unmarshal failed, err:", err)
+		return
+	}
+
+	users := clientMgr.GetAllUsers()
+	for id, client := range users{
+		if id == userReq.UserId {
+			continue
+		}
+		client.getMsgFromUser(userReq.UserId, userReq.Data)
+	}
+	return
+}
+
+func (p *Client) getMsgFromUser(userId int,msg string)  {
+	//【回复】消息结构体
+	var respMsg protocol.Message
+	//【回复】命令头部 用户状态改变协议
+	respMsg.Cmd = protocol.UserRecvMessageCmd
+	//组装【用户状态】结构体的内容
+	var recvMsg protocol.UserRecvMessageReq
+	recvMsg.Data = msg
+	recvMsg.UserId = userId
+	//序列化【用户状态】消息
+	data, err := json.Marshal(recvMsg)
+	if err != nil {
+		fmt.Println("marshal failed, err:", err)
+		return
+	}
+	//【回复】命令内容
+	respMsg.Data = string(data)
+	//序列化【回复】消息
+	data, err = json.Marshal(respMsg)
+	if err != nil {
+		fmt.Println("marshal failed, err:", err)
+		return
+	}
+	//发送【回复】消息
+	err = p.writePackage(data)
+	if err != nil {
+		fmt.Println("send failed, err:", err)
+		return
+	}
+}
 //登录
 func (p *Client) login(msg *protocol.Message) (err error) {
 	defer func() {

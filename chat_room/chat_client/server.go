@@ -17,16 +17,28 @@ func processServerMessage(conn net.Conn) {
 			os.Exit(0)
 		}
 
-		var userStatus protocol.UserStatusNotify
-		err = json.Unmarshal([]byte(msg.Data), &userStatus)
-		if err != nil {
-			fmt.Println("unmarshal failed, err:", err)
-			return
-		}
-
 		switch msg.Cmd {
 		case protocol.UserStatusNotifyRes:
+			var userStatus protocol.UserStatusNotify
+			err = json.Unmarshal([]byte(msg.Data), &userStatus)
+			if err != nil {
+				fmt.Println("unmarshal failed, err:", err)
+				return
+			}
 			updateUserStatus(userStatus)
+		case protocol.UserRecvMessageCmd:
+			recvMessageFromServer(msg)
 		}
 	}
+}
+
+func recvMessageFromServer(msg *protocol.Message)  {
+	var recvMsg protocol.UserRecvMessageReq
+	err := json.Unmarshal([]byte(msg.Data), &recvMsg)
+	if err != nil {
+		fmt.Println("unmarshal failed, err:", err)
+		return
+	}
+	//后台线程 通过管道将消息给前台
+	msgChan <- recvMsg
 }

@@ -4,8 +4,15 @@ import (
 	"net"
 	"fmt"
 	"golangPractice/chat_room/model"
+	"golangPractice/chat_room/protocol"
 )
+
 var user model.User
+var msgChan chan protocol.UserRecvMessageReq
+
+func init()  {
+	msgChan = make(chan protocol.UserRecvMessageReq, 1000)
+}
 
 func main() {
 	connect, err := net.Dial("tcp", "localhost:10000")
@@ -33,6 +40,6 @@ func main() {
 
 	for {
 		//用户交互逻辑
-		logic()
+		logic(connect)
 	}
 }
