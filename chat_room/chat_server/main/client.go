@@ -88,6 +88,7 @@ func (p *Client) login(msg *protocol.Message) (err error) {
 		return
 	}
 	fmt.Println("user ", user.UserId, " login success")
+	clientMgr.AddClient(cmd.Id, p)
 	return
 }
 
