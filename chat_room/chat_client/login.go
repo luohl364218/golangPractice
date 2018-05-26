@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"os"
+	"golangPractice/chat_room/model"
 )
 
 //注意 先在Redis中执行 hset users 1 "{\"user_id\":1,\"passwd\":\"123456789\"}" 存储用户信息
@@ -72,7 +73,10 @@ func login(conn net.Conn, userId int, password string) (err error) {
 			continue
 		}
 		//本地内存中保存
-		onlineUser = append(onlineUser, v)
+		user := &model.User{
+			UserId:v,
+		}
+		onlineUserMap[v] = user
 	}
 	return
 }
