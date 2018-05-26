@@ -16,15 +16,16 @@ type Client struct {
 }
 
 func (p *Client) readPackage() (msg *protocol.Message, err error) {
-	//首先读取消息长度[0:4]
-	n, err := p.conn.Read(p.buf[0:4])
-	if n != 4 {
+	//todo 64位系统为8 32位系统为4
+	//首先读取消息长度[0:8]
+	n, err := p.conn.Read(p.buf[0:8])
+	if n != 8 {
 		err = errors.New("read header failed")
 		return
 	}
 	//字节转为整型
-	buffer := bytes.NewBuffer(p.buf[0:4])
-	var temp int32
+	buffer := bytes.NewBuffer(p.buf[0:8])
+	var temp int64
 	err = binary.Read(buffer, binary.BigEndian, &temp)
 	if err != nil {
 		fmt.Println("read package len failed")
@@ -39,6 +40,7 @@ func (p *Client) readPackage() (msg *protocol.Message, err error) {
 		return
 	}
 	//转化为结构体
+	msg = new(protocol.Message)
 	err = json.Unmarshal(p.buf[0:packLen], msg)
 	if err != nil {
 		fmt.Println("unmarshal failed, err:", err)
@@ -81,6 +83,7 @@ func (p *Client) login(msg *protocol.Message) (err error) {
 		p.loginResp(err)
 	}()
 
+	fmt.Printf("recv user login request, data:%v", *msg)
 	var cmd protocol.LoginCmd
 	err = json.Unmarshal([]byte(msg.Data), &cmd)
 	if err != nil {
@@ -145,7 +148,7 @@ func (p *Client) register(msg *protocol.Message) (err error) {
 //写回复
 func (p *Client) writePackage(data []byte) (err error) {
 	//写消息长度
-	packLen := len(data)
+	packLen := uint32(len(data))
 	buffer := bytes.NewBuffer(p.buf[0:4])
 	//将长度值写入切片
 	err = binary.Write(buffer, binary.BigEndian, packLen)
@@ -154,7 +157,7 @@ func (p *Client) writePackage(data []byte) (err error) {
 		return
 	}
 	//发送消息长度
-	n, err := p.conn.Write(p.buf[0:4])
+	n, err := p.conn.Write(buffer.Bytes())
 	if err != nil {
 		err = errors.New("write header failed")
 		return
@@ -166,7 +169,7 @@ func (p *Client) writePackage(data []byte) (err error) {
 		return
 	}
 
-	if n != packLen {
+	if n != int(packLen) {
 		err = errors.New("write data not finished")
 		return
 	}
